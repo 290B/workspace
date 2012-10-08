@@ -1,0 +1,4 @@
+java -cp /cs/student/orein/290b/homework1/src:/cs/student/orein/Public/290b/homework1/computer.jar \
+     -Djava.rmi.server.codebase=file:///cs/student/orein/Public/290b/homework1/computer.jar \
+     -Djava.security.policy=server.policy system.ComputerImpl
+    

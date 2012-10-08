@@ -1,0 +1,17 @@
+javac api/Computer.java api/Task.java
+jar cvf api.jar api/*.class
+
+javac system/ComputerImpl.java
+jar cvf system.jar system/*.class 
+
+javac client/MandelbrotClient.java
+jar cvf client.jar client/*.class
+
+javac tasks/MandelbrotSetTask.java
+jar cvf tasks.jar tasks/*.class
+
+javac client/TspClient.java
+jar cvf client.jar client/*.class
+
+javac tasks/TspTask.java
+jar cvf tasks.jar tasks/*.class

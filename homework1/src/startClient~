@@ -1,0 +1,4 @@
+java -cp /cs/student/torgel/workspace/firstRMI/src:/cs/student/torgel/Public/clusterHomework/task1/compute.jar \
+     -Djava.rmi.server.codebase=file:///cs/student/torgel/Public/clusterHomework/task1/compute.jar \
+     -Djava.security.policy=client.policy \
+     client.ComputePi cartman 400

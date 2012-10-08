@@ -1,0 +1,7 @@
+clean
+compile
+dist
+javadoc
+runComputer
+runMandelbrotClient
+runTspClient

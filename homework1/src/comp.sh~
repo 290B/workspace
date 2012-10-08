@@ -1,0 +1,5 @@
+javac api/Computer.java api/Task.java
+jar cvf compute.jar compute/*.class
+
+javac system/ComputerImpl.java
+jar cvf system.jar compute/*.class 

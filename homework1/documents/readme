@@ -1,0 +1,40 @@
+Readme for Homework1 in coures 290b , fall 2012
+by Oeyvind and Torgeir
+
+Demonstration of java RMI using tho JVM and two known computational problems
+########## Methode 1: Using ant and build.xml #############
+
+To compile, type:
+	@ ant compile
+
+To distribute the files to the web (http://www.cs.ucsb.edu/~orein/290b/homework1/), type:
+	@ ant dist
+
+To start the computer, type:
+	@ ant runComputer
+
+To start the mandelbrot client, type:
+	@ ant runMandelbrotClient
+
+To start the Tsp client, type:
+	@ ant runTspClient
+
+
+To select a different host, change the hostename in build.xml (default is localhost)
+
+########## Method 2: Using unix scripts (in case ant doesn't work)##################
+
+The scripts are located in src/
+
+
+To compile, type:
+	@ ./comp
+
+To start the computer, type:
+	@ ./startServer
+
+To start the mandelbrot client, type:
+	@ ./startMandlebrotClient localhost
+
+To start the Tsp client, type:
+	@ ./startTspClient localhost
