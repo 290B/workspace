@@ -21,6 +21,8 @@ public class TspTask implements Task<int[]>, Serializable{
     
     private final double[][] towns;
     
+    private final int secondTown;
+    
     /**
      * Starts the TSP computation
      * 
@@ -36,11 +38,15 @@ public class TspTask implements Task<int[]>, Serializable{
 	 * takes a double[][] cities that codes the x and y coordinates of city[i]: 
 	 * cities[i][0] is the x-coordinate of city[i] and cities[i][1] is the 
 	 * y-coordinate of city[i]. 
+	 * @param secondTown is the second town to be visited by the algorithm to 
+	 * find a partial solution to the problem. Each task only inspects the 
+	 * routes that begins with town[0] -> secondTown
 	 * 
 	 */
     
-    public TspTask(double[][] towns) {
+    public TspTask(double[][] towns,int secondTown) {
         this.towns = towns;
+        this.secondTown = secondTown;
     }
     
     /**
