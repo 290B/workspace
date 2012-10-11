@@ -2,18 +2,23 @@ package tasks;
 
 import api.Task;
 
+import tasks.MandelbrotReturn;
+
+
 /**
  * This class is a implementations that solves the Mandelbrot set.
  * @author orein
  *
  */
 
-public class MandelbrotSetTask implements Task<int[][]>, java.io.Serializable{
+public class MandelbrotSetTask implements Task<MandelbrotReturn>, java.io.Serializable{
 	private final double cornerX;
 	private final double cornerY;
 	private final double edgeLength;
 	private final int n;
 	private final int iterLimit;
+	private final int taskCoordX;
+	private final int taskCoordY;
 	
 	private static final long serialVersionUID = 227L;
 	
@@ -26,12 +31,14 @@ public class MandelbrotSetTask implements Task<int[][]>, java.io.Serializable{
 	 * @param setIterLimit is the iteration limit for each pixel in the calculation. Exceeding this limit stops the calculation. Typical value 64
 	 */
 	
-	public MandelbrotSetTask(double setCornerX, double setCornerY, double setEdgeLength, int setN, int setIterLimit){
+	public MandelbrotSetTask(double setCornerX, double setCornerY, double setEdgeLength, int setN, int setIterLimit, int taskCoordX, int taskCoordY){
 		this.cornerX = setCornerX;
 		this.cornerY = setCornerY;
 		this.edgeLength = setEdgeLength;
 		this.n = setN;
 		this.iterLimit = setIterLimit;
+		this.taskCoordX = taskCoordX;
+		this.taskCoordY = taskCoordY;
 	}
 	
 	/**
@@ -39,7 +46,7 @@ public class MandelbrotSetTask implements Task<int[][]>, java.io.Serializable{
 	 * @return the 2-dim count array that describes the number of iterations for each point in the Mandelbrot set.
 	 */
 	
-	public int[][] execute(){
+	public MandelbrotReturn execute(){
 		int[][] count = new int[n][n]; 
 		for (int i = 0; i < n; i++){
 			for (int j = 0; j < n; j++){
@@ -60,6 +67,7 @@ public class MandelbrotSetTask implements Task<int[][]>, java.io.Serializable{
 				count[i][n-j-1] = k; 
 			}
 		}
-		return count;
+		MandelbrotReturn ret = new MandelbrotReturn(taskCoordX, taskCoordY,count);
+		return ret;
 	}
 }
