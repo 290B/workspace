@@ -35,7 +35,24 @@ public class SpaceImpl implements Space,proxy, Computer2Space{
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-
+		
+		
+		
+	}
+	
+	public static void init(Space spacel) { // for running in same JVM
+		if (System.getSecurityManager() == null ) 
+		{ 
+		   System.setSecurityManager(new java.rmi.RMISecurityManager() ); 
+		}
+		try {
+			Space stub = (Space)UnicastRemoteObject.exportObject(spacel, 0);
+			Registry registry = LocateRegistry.createRegistry( 1099 );
+			registry.rebind(SERVICE_NAME, stub);
+			System.out.println("SpaceImpl bound");
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 	@Override
 	public void put(Task task) throws RemoteException {

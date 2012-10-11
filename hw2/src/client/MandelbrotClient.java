@@ -3,6 +3,8 @@ package client;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
+import system.SpaceImpl;
 import tasks.MandelbrotSetTask;
 import tasks.MandelbrotReturn;
 import java.rmi.registry.*;
@@ -18,15 +20,34 @@ public class MandelbrotClient {
 	private static final double EDGE_LENGTH = 0.01611;
 	private static final int taskDivideNum = 4;
 	private static final int numTasks = taskDivideNum*taskDivideNum;
+	private static boolean standalone = false; 
+	private static SpaceImpl localSpace;
 	
 	
 	public static void main(String[] args) {
+		
+		
+		if (args.length > 1) {
+    		if (args[1].equals("standalone")){
+    			System.out.println("Running standalone mode");
+    			standalone = true;
+    			localSpace = new SpaceImpl();
+    			localSpace.init(localSpace);
+    		}
+    		
+    	}
+		
+		
 		if (System.getSecurityManager() == null ){ 
 		   System.setSecurityManager(new java.rmi.RMISecurityManager() ); 
 		}
 		try{
 			
-        	String name = "Space";
+			
+			
+			
+			
+			String name = "Space";
     		Registry registry = LocateRegistry.getRegistry(args[0]);
     		Space space = (Space) registry.lookup(name);
 			
