@@ -22,7 +22,7 @@ public class ComputerImpl implements Computer {
 	
 	public static void main(String[] args) {
 		String spaceHost = args[0];
-		int port = Integer.parseInt(args[1]);
+		int port = 1098;//Integer.parseInt(args[1]);
 		String name = "Computer";
 		String spaceName = "Space";
 		if (System.getSecurityManager() == null ) 
