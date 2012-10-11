@@ -30,7 +30,7 @@ public class TspTask implements Task<int[]>, Serializable{
      */
     
     public int [] execute() {
-    	return computeRoute(towns);
+    	return computeRoute(towns,secondTown);
     }
     
     /**
@@ -56,10 +56,10 @@ public class TspTask implements Task<int[]>, Serializable{
      * @return the sequence of towns to visit for the shorters route
      */
         
-    public static int[] computeRoute(double[][] towns){
+    public static int[] computeRoute(double[][] towns,int secondTown){
     	
     	double[][] distances = calcAllDistances(towns);	  	
-    	int [][] allRoutes = generateRoutes(distances[0].length);
+    	int [][] allRoutes = generateRoutes(towns.length,secondTown);
     	int []bestRoute = findBestRoute(allRoutes,distances);
     	return bestRoute;
     }
@@ -99,24 +99,52 @@ public class TspTask implements Task<int[]>, Serializable{
      * @return a list of all possible routes 
      */
     
-     public static int [][] generateRoutes(int length){
-    	int [][] temp = new int [factorial(length)][length];
-    	for (int i = 0; i < length; i++){
-    		temp[0][i] = i;
-    	}
-    	for (int i = 1;i<temp.length;i++){
-    		temp[i] = Arrays.copyOf(temp[i-1],length);
-    		int k,j;
-    		for (k = length - 2; temp[i][k] >= temp[i][k+1]; k--);
-    		for (j = length - 1; temp[i][k] >= temp[i][j]; j--);
-    		swap(temp[i],k,j);
-    		for(int l = 1; k+l < length-l; l++) swap(temp[i],k+l,length-l);
-    		
-    	}
-    	return temp;
-    	
-    }
-    
+    public static int [][] generateRoutes(int length, int secondTown){
+		length = length-2;
+		int [][] temp = new int [factorial(length)][length];
+		int [][] temp2  = new int [factorial(length)][length+2]; 
+		
+		int a = 0;
+		int b = 1;
+		while (a<length){
+			
+			if (b != 0 && b != secondTown){
+				temp[0][a] = b;
+				a++;
+			}
+			b++;
+		}
+
+		
+		for (int i = 1;i<temp.length;i++){
+			temp[i] = Arrays.copyOf(temp[i-1],length);
+			int k,j;
+			for (k = length - 2; temp[i][k] >= temp[i][k+1]; k--);
+			for (j = length - 1; temp[i][k] >= temp[i][j]; j--);
+			swap(temp[i],k,j);
+			for(int l = 1; k+l < length-l; l++) swap(temp[i],k+l,length-l);
+			
+		}
+		
+
+		
+		for (int i = 0 ; i < temp2.length;i++){
+			temp2[i][0] = 0;
+			temp2[i][1] = secondTown;
+		}
+
+
+		
+		
+		for (int c = 0; c<temp.length;c++){
+			for (int d = 0;d<(temp2[0].length-2);d++ ){
+				temp2[c][d+2] = temp[c][d];
+			}
+		}
+
+		return temp2;
+		
+	}
     static void swap(int[] a, int i, int j) {
         int t = a[i];
         a[i] = a[j];
