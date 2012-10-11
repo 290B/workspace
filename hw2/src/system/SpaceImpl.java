@@ -48,16 +48,19 @@ public class SpaceImpl implements Space,proxy, Computer2Space{
 		return (Result)resultQueue.take();
 	}
 	@Override
-	public void exit() throws RemoteException {
+	public void exit() {
 		while(!proxyList.isEmpty()){
 			try {
 				ComputerProxyImpl cpl = (ComputerProxyImpl)proxyList.take();
 				cpl.exit();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				cpl.stop();
+			} catch (Exception e) {
+		
 			}
 			
 		}
+		System.exit(0);
+		
 		
 	}
 	@Override
