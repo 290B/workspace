@@ -7,19 +7,17 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.*;
 
 import api.*;
+import system.Computer;
 
-public class SpaceImpl extends UnicastRemoteObject implements Space{
-
-	
+public class SpaceImpl implements Space,proxy, Computer2Space{
 	/**
 	 * 
 	 */
 	private static final BlockingQueue taskQueue = new LinkedBlockingQueue();
+	private static final BlockingQueue resultQueue = new LinkedBlockingQueue();
+	private static BlockingQueue proxyList = new LinkedBlockingQueue();
 	private static final long serialVersionUID = 1L;
-	protected SpaceImpl() throws RemoteException {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	
 	/**
 	 * @param args
 	 */
@@ -41,18 +39,51 @@ public class SpaceImpl extends UnicastRemoteObject implements Space{
 	}
 	@Override
 	public void put(Task task) throws RemoteException {
-		
-		
+		taskQueue.add(task);
 	}
+	
 	@Override
-	public Result take() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public Result take() throws RemoteException, InterruptedException {
+		
+		return (Result)resultQueue.take();
 	}
 	@Override
 	public void exit() throws RemoteException {
-		// TODO Auto-generated method stub
+		while(!proxyList.isEmpty()){
+			try {
+				ComputerProxyImpl cpl = (ComputerProxyImpl)proxyList.take();
+				cpl.exit();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
 		
 	}
-	
+	@Override
+	public void putResultQueue(Result result) {
+		resultQueue.add(result);
+		
+	}
+	@Override
+	public void putTaskQueue(Task task) {
+		taskQueue.add(task);
+		
+	}
+	public Task takeTaskQueue() throws InterruptedException {
+			Task t = (Task)taskQueue.take();
+			return t;
+	}
+	@Override
+	public void register(Computer computer) throws RemoteException, InterruptedException {
+		ComputerProxyImpl computerProxy = new ComputerProxyImpl(computer, this);
+		computerProxy.start();
+		proxyList.add(computerProxy);
+		System.out.println("Computer registered");
+	}
+	@Override
+	public void unRegister(ComputerProxyImpl computerProxy) {
+		proxyList.remove(computerProxy);
+		System.out.println("Computer unregistered");
+	}
 }
