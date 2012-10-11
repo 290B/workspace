@@ -2,8 +2,9 @@ package client;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import api.Task;
+
 import api.Space;
+import api.Result;
 import tasks.TspTask;
 
 import javax.swing.*;
@@ -13,7 +14,6 @@ import java.awt.image.BufferedImage;
 public class TspClient {
 	
 	private static final int N_PIXELS = 256;
-//	private static final double[][] cities = {{6,3},{2,2},{5,8},{1,5},{1,6},{2,7},{2,8},{6,5},{1,3},{6,6}};
 	private static final double[][] cities =
 		{
 			{ 1, 1 },
@@ -29,8 +29,7 @@ public class TspClient {
 			{ 6, 6 },
 			{ 3, 6 }
 		};
-
-	
+	private static final int numTasks = cities.length-1;
 	
     public static void main(String args[]) {
         if (System.getSecurityManager() == null) {
@@ -38,11 +37,29 @@ public class TspClient {
         }
         try {
         	
-        	TspTask[] PartialTspTasks = splitTask(cities);
-        	putAllTasks(PartialTspTasks ,args[0]); 
-        	int[] partialResuls = getPartialResults(cities.length-1);
-        	//todo check which result is the best.
+        	double[][] distances = tasks.TspTask.calcAllDistances(cities);
         	
+        	String name = "Space";
+    		Registry registry = LocateRegistry.getRegistry(args[0]);
+    		Space space = (Space) registry.lookup(name);
+    		        	
+    		// every task begins in "the last" city and then computes all routes that begin with that city and "secondCity"
+        	for (int secondCity = 1;secondCity<cities.length;secondCity++){
+        		space.put(new TspTask(cities,secondCity));
+        	}
+        	
+        	Result[] results = new Result[numTasks];
+        	for (int i = 0; i < numTasks;i++){
+        		results[i] = space.take();
+        	}
+        	
+        	int [][] routes = new int [numTasks][cities.length];
+        	for (int i = 0; i < numTasks ; i++){
+        		routes[i] = (int[])results[i].getTaskReturnValue();
+        	}
+        	
+        	int [] tour = tasks.TspTask.findBestRoute(routes,distances);
+
             JLabel euclideanTspLabel = displayEuclideanTspTaskReturnValue( cities, tour );
             JFrame frame = new JFrame( "Result Visualizations" );
             frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -58,62 +75,8 @@ public class TspClient {
         
         
         
-    }
-    
-    public static void putAllTasks(TspTask[] tasks, String arg){
-    	for (int i = 0; i < tasks.length; i++){
-    		api.Space.Put(tasks[i], arg);
-    	}
-    }
-    
-    public static TspTask[] splitTask(double[][] allCities){
-    	int numCitiesPartial = allCities.length-1;
-    	TspTask[] partialTasks = new TspTask[numCitiesPartial];
-    	for (int i = 0;i<numCitiesPartial;i++){
-    		partialTasks[i] = new TspTask(allCities,i+1);
-    	}
-    	return partialTasks;
-    	
-    }
-    
-    public static int[] getPartialResults(int numTasks){
-    	int [] temp = new int[numTasks];
-    	for (int i = 0; i < numTasks; i++){
-    		temp[i] = api.Space.get();
-    	}
-    	return temp;
-    }
-    
-    public static void RunTasks(TspTask[] tasks){
-    	for (int i = 0;i<tasks.length;i++){
-    		
-    	}
-    }
-    
-    private static Object runTask(Task<?> t, String host)  {
-    	try{	
-    		String name = "Computer";
-    		Registry registry = LocateRegistry.getRegistry(host);
-    		Computer computer = (Computer) registry.lookup(name);
-    		int total = 0;
-    		
-    		for (int i = 0; i < 5; i++){
-    			long start = System.currentTimeMillis();
-    			computer.execute(t);
-    			long stop = System.currentTimeMillis();
-    			System.out.println("TSP, " + (i+1) +" try: " +(stop-start) +" milliseconds");
-    			total += (stop-start);
-    		}
-    		System.out.println("Average time: " + total/5);
-    		return computer.execute(t);
-    	
-    	}catch (Exception e){
-    		System.err.println("TspClient exception:");
-    		e.printStackTrace();
-    		return 0;
-    		}
-    	}
-    
+    }    
+            
     private static JLabel displayEuclideanTspTaskReturnValue( double[][] cities, int[] tour )
     {
         System.out.print( "Tour: ");
@@ -183,6 +146,5 @@ public class TspClient {
         ImageIcon imageIcon = new ImageIcon( image );
         return new JLabel( imageIcon );
     }
-    
     
 }
