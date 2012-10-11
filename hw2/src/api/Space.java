@@ -9,7 +9,7 @@ public interface Space extends Remote
 
     void put( Task task ) throws RemoteException;
 
-    Result take() throws RemoteException;
+    Result take() throws RemoteException, InterruptedException; // 
 
     void exit() throws RemoteException;
 }

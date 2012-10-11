@@ -7,7 +7,7 @@ import api.*;
 
 public interface Computer extends Remote
 {
-    Result execute( Task task ) throws RemoteException;
-
+    //Result execute( Task task ) throws RemoteException;
+	public <T> T execute(Task t) throws RemoteException;
     void exit() throws RemoteException;
 }
