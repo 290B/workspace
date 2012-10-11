@@ -11,12 +11,12 @@ import api.Result;
 import api.Space;
 
 public class MandelbrotClient {
-	private static final int N_PIXELS = 256;
-	private static final int ITERATION_LIMIT = 64;
-	private static final double CORNER_X = -2.0;
-	private static final double CORNER_Y = -2.0;
-	private static final double EDGE_LENGTH = 4.0;
-	private static final int taskDivideNum = 2;
+	private static final int N_PIXELS = 1024;
+	private static final int ITERATION_LIMIT = 512;
+	private static final double CORNER_X = -0.7510975859375;
+	private static final double CORNER_Y = 0.1315680625;
+	private static final double EDGE_LENGTH = 0.01611;
+	private static final int taskDivideNum = 4;
 	private static final int numTasks = taskDivideNum*taskDivideNum;
 	
 	
@@ -42,7 +42,7 @@ public class MandelbrotClient {
     				newCornerY = CORNER_Y+(j*newEdgeLength);
     				newPixelCount = (int)(N_PIXELS/taskDivideNum);
  
-    				space.put(new MandelbrotSetTask(newCornerX, newCornerY, newEdgeLength, newPixelCount, ITERATION_LIMIT, i, j));
+    				space.put(new MandelbrotSetTask(newCornerX, newCornerY, newEdgeLength, newPixelCount, ITERATION_LIMIT, i, taskDivideNum-j-1));
         		}
     		}
     		

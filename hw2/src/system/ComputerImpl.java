@@ -22,6 +22,7 @@ public class ComputerImpl implements Computer {
 	
 	public static void main(String[] args) {
 		String spaceHost = args[0];
+		int port = Integer.parseInt(args[1]);
 		String name = "Computer";
 		String spaceName = "Space";
 		if (System.getSecurityManager() == null ) 
@@ -32,7 +33,7 @@ public class ComputerImpl implements Computer {
 			
 			Computer computer = new ComputerImpl();
 			Computer stub = (Computer) UnicastRemoteObject.exportObject(computer, 0);
-			Registry registry = LocateRegistry.createRegistry( 1098 );
+			Registry registry = LocateRegistry.createRegistry( port );
 			registry.rebind(name, stub);
 			
 			System.out.println("Connecting to space: " + spaceHost);
