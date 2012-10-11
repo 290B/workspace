@@ -68,6 +68,7 @@ public class TspClient {
             container.add( new JScrollPane( euclideanTspLabel ), BorderLayout.EAST );
             frame.pack();
             frame.setVisible( true );
+            space.exit();
         } catch (Exception e) {
             System.err.println("ComputeTSP exception:");
             e.printStackTrace();

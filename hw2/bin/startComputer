@@ -1,1 +1,1 @@
-java -Djava.security.policy=policy system.ComputerImpl
+java -Djava.security.policy=policy system.ComputerImpl localhost

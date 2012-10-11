@@ -15,24 +15,18 @@ public class ComputerProxyImpl extends Thread {
 	}
 	public void exit() throws RemoteException{
 		computer.exit();
-		this.stop();
 	}
 	
 	public void run(){
-		System.out.println("Proxy started");
 		while(true){
 			Task t;
 			try {
 				t = spaceImpl.takeTaskQueue();
 				try {
-					long start = System.currentTimeMillis();
-					Object o = computer.execute(t);
-					long stop = System.currentTimeMillis();
-				
-					spaceImpl.putResultQueue(new Result(o , (stop-start)));
+					Result result = computer.execute(t);
+					spaceImpl.putResultQueue(result);
 				} catch (RemoteException e) {
 					spaceImpl.putTaskQueue(t);
-					e.printStackTrace();
 					spaceImpl.unRegister(this);
 					return;
 				}

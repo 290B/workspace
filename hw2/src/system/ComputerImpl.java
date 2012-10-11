@@ -5,16 +5,24 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import system.Computer;
+import api.Result;
 import api.Task;
 
 public class ComputerImpl implements Computer {
 	
-	public <T> T execute(Task t) {
-        return (T)t.execute();
+	public Result execute(Task t) {
+		System.out.println("Excecuting task...");
+        long start = System.currentTimeMillis();
+        Object value = t.execute();
+		long stop = System.currentTimeMillis();
+		System.out.println("completed in " + (stop-start) + " milliseconds");
+		
+		return (new Result(value , (stop-start)));
     }
 	
 	public static void main(String[] args) {
-		String spaceHost = "boris";
+		String spaceHost = args[0];
+		int port = Integer.parseInt(args[1]);
 		String name = "Computer";
 		String spaceName = "Space";
 		if (System.getSecurityManager() == null ) 
@@ -25,11 +33,10 @@ public class ComputerImpl implements Computer {
 			
 			Computer computer = new ComputerImpl();
 			Computer stub = (Computer) UnicastRemoteObject.exportObject(computer, 0);
-			Registry registry = LocateRegistry.createRegistry( 1099 );
+			Registry registry = LocateRegistry.createRegistry( port );
 			registry.rebind(name, stub);
 			
 			System.out.println("Connecting to space: " + spaceHost);
-			String spaceLookup = "Space";
 			Registry registrySpace = LocateRegistry.getRegistry(spaceHost);
 			Computer2Space space = (Computer2Space)registrySpace.lookup(spaceName);
 			space.register(computer);
@@ -42,6 +49,7 @@ public class ComputerImpl implements Computer {
 
 	@Override
 	public void exit() throws RemoteException {
+		System.out.println("Remote call to exit()");
 		System.exit(0);
 		
 	}
