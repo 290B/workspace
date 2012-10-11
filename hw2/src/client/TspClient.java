@@ -5,6 +5,7 @@ import java.rmi.registry.Registry;
 
 import api.Space;
 import api.Result;
+import api.Task;
 import tasks.TspTask;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ import java.awt.image.BufferedImage;
 
 public class TspClient {
 	
-	private static final int N_PIXELS = 256;
+	private static final int N_PIXELS = 512;
 	private static final double[][] cities =
 		{
 			{ 1, 1 },
@@ -37,28 +38,24 @@ public class TspClient {
         }
         try {
         	
-        	double[][] distances = tasks.TspTask.calcAllDistances(cities);
+
         	
         	String name = "Space";
     		Registry registry = LocateRegistry.getRegistry(args[0]);
     		Space space = (Space) registry.lookup(name);
     		        	
-    		// every task begins in "the last" city and then computes all routes that begin with that city and "secondCity"
-        	for (int secondCity = 1;secondCity<cities.length;secondCity++){
-        		space.put(new TspTask(cities,secondCity));
-        	}
-        	
-        	Result[] results = new Result[numTasks];
-        	for (int i = 0; i < numTasks;i++){
-        		results[i] = space.take();
-        	}
-        	
-        	int [][] routes = new int [numTasks][cities.length];
-        	for (int i = 0; i < numTasks ; i++){
-        		routes[i] = (int[])results[i].getTaskReturnValue();
-        	}
-        	
-        	int [] tour = tasks.TspTask.findBestRoute(routes,distances);
+    		System.out.println("Starting TSP job");
+    		int tour[] = new int [cities.length];
+    		int total = 0;
+    		for (int i = 0; i < 5; i++){
+    			long start = System.currentTimeMillis();
+        		tour = runJob (cities,space);
+    			long stop = System.currentTimeMillis();
+    			System.out.println("TSP, " + (i+1) +" try: " +(stop-start) +" milliseconds");
+    			total += (stop-start);
+    		}
+    		System.out.println("Average time: " + total/5);
+    		       	
 
             JLabel euclideanTspLabel = displayEuclideanTspTaskReturnValue( cities, tour );
             JFrame frame = new JFrame( "Result Visualizations" );
@@ -78,6 +75,35 @@ public class TspClient {
         
     }    
             
+    private static int[] runJob(double[][] cities, Space space){
+    	
+       	try{    		
+       		
+       		double[][] distances = tasks.TspTask.calcAllDistances(cities);
+    		// every task begins in "the last" city and then computes all routes that begin with that city and "secondCity"
+       		
+        	for (int secondCity = 1;secondCity<cities.length;secondCity++){
+        		space.put(new TspTask(cities,secondCity));
+        	}
+        	Result[] results = new Result[numTasks];
+        	for (int i = 0; i < numTasks;i++){
+        		results[i] = space.take();
+        	}
+        	int [][] routes = new int [numTasks][cities.length];
+        	for (int i = 0; i < numTasks ; i++){
+        		routes[i] = (int[])results[i].getTaskReturnValue();
+        	}
+        	int [] tour = tasks.TspTask.findBestRoute(routes,distances);
+       		    		
+    		return tour;
+    	
+    	}catch (Exception e){
+    		System.err.println("TspClient exception:");
+    		e.printStackTrace();
+    		return null;
+    		}
+    }
+    
     private static JLabel displayEuclideanTspTaskReturnValue( double[][] cities, int[] tour )
     {
         System.out.print( "Tour: ");
