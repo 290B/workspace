@@ -20,8 +20,7 @@ public class MandelbrotClient {
 	private static final double CORNER_Y = 0.1315680625;
 	private static final double EDGE_LENGTH = 0.01611;
 	private static final int taskDivideNum = 4;
-	private static final int numTasks = taskDivideNum*taskDivideNum;
-	private static boolean standalone = false; 
+	private static final int numTasks = taskDivideNum*taskDivideNum; 
 	private static SpaceImpl localSpace;
 	private static ComputerImpl localComputer;
 	
@@ -32,7 +31,6 @@ public class MandelbrotClient {
 		if (args.length > 1) {
     		if (args[1].equals("standalone")){
     			System.out.println("Running standalone mode");
-    			standalone = true;
     			localSpace = new SpaceImpl();
     			localSpace.initLocaly(localSpace);
     			
@@ -105,6 +103,7 @@ public class MandelbrotClient {
 			container.add( new JScrollPane( mandelbrotLabel ), BorderLayout.WEST );
 			frame.pack();
 			frame.setVisible( true );
+			space.exit();
 		}catch (Exception e) {
 			System.err.println("MandelbrotClient exception:");
 			e.printStackTrace();

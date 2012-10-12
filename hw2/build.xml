@@ -7,7 +7,7 @@
   <property name="dist"  location="dist"/>
 	
 	<property name="host" value="localhost"/>
-	<property name="standalone" value="standalone"/>
+	<property name="computerPort" value="1098"/>
 
   
   <!-- codebase properties --> 
@@ -49,7 +49,8 @@
   	<java classname="system.ComputerImpl" fork="true">
   	  <jvmarg value="-Djava.rmi.server.codebase=${web_codebase}"/>
   	  <jvmarg value="-Djava.security.policy=policy"/>
-  	  <arg value="localhost"/>
+  	  <arg value="${host}"/>
+  	  <arg value="${computerPort}"/>
   	  <classpath>
   	    <pathelement location="dist/system.jar"/>
   	  </classpath>
@@ -70,7 +71,7 @@
   	<java classname="client.MandelbrotClient" fork="true">
   	  <jvmarg value="-Djava.rmi.server.codebase=${web_codebase}"/>
   	  <jvmarg value="-Djava.security.policy=policy"/>
-  	  <arg value="localhost"/>
+  	  <arg value="${host}"/>
   	  <classpath>
   	    <pathelement location="dist/client.jar"/>
   	  </classpath>
@@ -82,7 +83,7 @@
   	  <jvmarg value="-Djava.rmi.server.codebase=${web_codebase}"/>
   	  <jvmarg value="-Djava.security.policy=policy"/>
   	  <arg value="${host}"/>
-  	  <arg value="${standalone}"/>
+  	  <arg value="standalone"/>
   	  <classpath>
   	    <pathelement location="dist/client.jar"/>
   	    <pathelement location="dist/system.jar"/>
@@ -94,13 +95,25 @@
   	<java classname="client.TspClient" fork="true">
   	  <jvmarg value="-Djava.rmi.server.codebase=${web_codebase}"/>
   	  <jvmarg value="-Djava.security.policy=policy"/>
-  	  <arg value="localhost"/>
+  	  <arg value="${host}"/>
   	  <classpath>
   	    <pathelement location="dist/client.jar"/>
   	  </classpath>
   	</java>
   </target>
 
+	<target name="tspStandalone" depends="dist" description="Run a TSP and system in one JVM" >
+	  	<java classname="client.TspClient" fork="true">
+	  	  <jvmarg value="-Djava.rmi.server.codebase=${web_codebase}"/>
+	  	  <jvmarg value="-Djava.security.policy=policy"/>
+	  	  <arg value="${host}"/>
+	  	  <arg value="${standalone}"/>
+	  	  <classpath>
+	  	    <pathelement location="dist/client.jar"/>
+	  	    <pathelement location="dist/system.jar"/>
+	  	  </classpath>
+	  	</java>
+	  </target>
   <target name="clean" description="clean up" >
     <!-- Delete the ${build} and ${dist} directory trees -->
     <delete dir="${file_codebase}/tasks"/>

@@ -6,13 +6,19 @@ import java.rmi.registry.Registry;
 import api.Space;
 import api.Result;
 import api.Task;
+import system.ComputerImpl;
+import system.SpaceImpl;
 import tasks.TspTask;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+
+
 public class TspClient {
+	private static SpaceImpl localSpace;  // Used for running on one JVM
+	private static ComputerImpl localComputer;
 	
 	private static final int N_PIXELS = 512;
 	private static final double[][] cities =
@@ -33,7 +39,22 @@ public class TspClient {
 	private static final int numTasks = cities.length-1;
 	
     public static void main(String args[]) {
-        if (System.getSecurityManager() == null) {
+        
+    	if (args.length > 1) {
+    		if (args[1].equals("standalone")){
+    			System.out.println("Running standalone mode");
+    			localSpace = new SpaceImpl();
+    			localSpace.initLocaly(localSpace);
+    			
+    			localComputer = new ComputerImpl();
+    			localComputer.initLocaly(localComputer);
+    		}
+    		
+    	}
+    	
+    	
+    	
+    	if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
         try {
