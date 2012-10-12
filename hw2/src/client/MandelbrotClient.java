@@ -8,6 +8,8 @@ import system.ComputerImpl;
 import system.SpaceImpl;
 import tasks.MandelbrotSetTask;
 import tasks.MandelbrotReturn;
+import tasks.TspTask;
+
 import java.rmi.registry.*;
 
 import api.Result;
@@ -55,10 +57,43 @@ public class MandelbrotClient {
 			String name = "Space";
     		Registry registry = LocateRegistry.getRegistry(args[0]);
     		Space space = (Space) registry.lookup(name);
+    		
+    		
+    		int [][] count = null;
+    		System.out.println("Starting Mandelbrotset job");
+    		int total = 0;
+    		for (int i = 0; i < 5; i++){
+    			long start = System.currentTimeMillis();
+        		count = runJob(space);
+    			long stop = System.currentTimeMillis();
+    			System.out.println("Mandelbrot, " + (i+1) +" try: " +(stop-start) +" milliseconds");
+    			total += (stop-start);
+    		}
+    		System.out.println("Average time: " + total/5);
 			
+
+
     		
-    		
-			double newEdgeLength = EDGE_LENGTH/taskDivideNum;
+			JLabel mandelbrotLabel = displayMandelbrotSetTaskReturnValue( count );
+			JFrame frame = new JFrame( "Result Visualizations" );
+			frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+			Container container = frame.getContentPane();
+			container.setLayout( new BorderLayout() );
+			container.add( new JScrollPane( mandelbrotLabel ), BorderLayout.WEST );
+			frame.pack();
+			frame.setVisible( true );
+		}catch (Exception e) {
+			System.err.println("MandelbrotClient exception:");
+			e.printStackTrace();
+		}
+	}
+
+	
+    private static int[][] runJob(Space space){
+    	
+       	try{    		
+       		
+       		double newEdgeLength = EDGE_LENGTH/taskDivideNum;
 			double newCornerX;
 			double newCornerY;
 			int newPixelCount = 0;
@@ -95,22 +130,15 @@ public class MandelbrotClient {
     				}
         		}
     		}
-
     		
-			JLabel mandelbrotLabel = displayMandelbrotSetTaskReturnValue( count );
-			JFrame frame = new JFrame( "Result Visualizations" );
-			frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-			Container container = frame.getContentPane();
-			container.setLayout( new BorderLayout() );
-			container.add( new JScrollPane( mandelbrotLabel ), BorderLayout.WEST );
-			frame.pack();
-			frame.setVisible( true );
-		}catch (Exception e) {
-			System.err.println("MandelbrotClient exception:");
-			e.printStackTrace();
-		}
-	}
-
+    		return count;
+    	
+    	}catch (Exception e){
+    		System.err.println("TspClient exception:");
+    		e.printStackTrace();
+    		return null;
+    		}
+    }
 	
 	private static JLabel displayMandelbrotSetTaskReturnValue( int[][] counts )
 	{
