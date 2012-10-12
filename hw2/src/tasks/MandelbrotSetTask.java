@@ -29,6 +29,8 @@ public class MandelbrotSetTask implements Task<MandelbrotReturn>, java.io.Serial
 	 * @param setEdgeLength is the length of the sides of the square starting in the left bottom corner, typical value 4
 	 * @param setN is the resolution of the calculation of the image of the Mandelbrot set. Typical value 256
 	 * @param setIterLimit is the iteration limit for each pixel in the calculation. Exceeding this limit stops the calculation. Typical value 64
+	 * @param taskCoordX is the coordinate describing where on the x axis this part of the solution will be placed in the complete picture
+	 * @param taskCoordY is the coordinate describing where on the y axis this part of the solution will be placed in the complete picture
 	 */
 	
 	public MandelbrotSetTask(double setCornerX, double setCornerY, double setEdgeLength, int setN, int setIterLimit, int taskCoordX, int taskCoordY){
@@ -43,7 +45,7 @@ public class MandelbrotSetTask implements Task<MandelbrotReturn>, java.io.Serial
 	
 	/**
 	 * To execute the calculations 
-	 * @return the 2-dim count array that describes the number of iterations for each point in the Mandelbrot set.
+	 * @return MandlebrotReturn is an object which contains the int [][] array with the number of iterations it took for each pixel of the task and the two coordinates that describe where in the complete picture this piece will be placed. See MandelbrotReturn doc.
 	 */
 	
 	public MandelbrotReturn execute(){
