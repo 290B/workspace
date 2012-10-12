@@ -6,7 +6,7 @@
   <property name="build" location="build"/>
   <property name="dist"  location="dist"/>
 	
-	<property name="host" value="localhost"/>
+	<property name="host" value="kyle"/>
 	<property name="computerPort" value="1098"/>
 
   
@@ -106,8 +106,8 @@
 	  	<java classname="client.TspClient" fork="true">
 	  	  <jvmarg value="-Djava.rmi.server.codebase=${web_codebase}"/>
 	  	  <jvmarg value="-Djava.security.policy=policy"/>
-	  	  <arg value="${host}"/>
-	  	  <arg value="${standalone}"/>
+	  	  <arg value="localhost"/>
+	  	  <arg value="standalone"/>
 	  	  <classpath>
 	  	    <pathelement location="dist/client.jar"/>
 	  	    <pathelement location="dist/system.jar"/>

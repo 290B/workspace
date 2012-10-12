@@ -21,7 +21,7 @@ public class MandelbrotClient {
 	private static final double CORNER_X = -0.7510975859375;
 	private static final double CORNER_Y = 0.1315680625;
 	private static final double EDGE_LENGTH = 0.01611;
-	private static final int taskDivideNum = 4;
+	private static final int taskDivideNum = 3;
 	private static final int numTasks = taskDivideNum*taskDivideNum; 
 	private static SpaceImpl localSpace;
 	private static ComputerImpl localComputer;
@@ -62,6 +62,9 @@ public class MandelbrotClient {
     		int total = 0;
     		for (int i = 0; i < 5; i++){
     			long start = System.currentTimeMillis();
+        		//MandelbrotSetTask mst = new MandelbrotSetTask(CORNER_X, CORNER_Y, EDGE_LENGTH, N_PIXELS, ITERATION_LIMIT, 0, 0);
+    			//MandelbrotReturn mrst = mst.execute();
+        		//count =  mrst.getMandelbrotResults() ;
         		count = runJob(space);
     			long stop = System.currentTimeMillis();
     			System.out.println("Mandelbrot, " + (i+1) +" try: " +(stop-start) +" milliseconds");
@@ -80,6 +83,7 @@ public class MandelbrotClient {
 			container.add( new JScrollPane( mandelbrotLabel ), BorderLayout.WEST );
 			frame.pack();
 			frame.setVisible( true );
+			space.exit();
 		}catch (Exception e) {
 			System.err.println("MandelbrotClient exception:");
 			e.printStackTrace();
@@ -128,24 +132,6 @@ public class MandelbrotClient {
     				}
         		}
     		}
-    		
-<<<<<<< HEAD
-			JLabel mandelbrotLabel = displayMandelbrotSetTaskReturnValue( count );
-			JFrame frame = new JFrame( "Result Visualizations" );
-			frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-			Container container = frame.getContentPane();
-			container.setLayout( new BorderLayout() );
-			container.add( new JScrollPane( mandelbrotLabel ), BorderLayout.WEST );
-			frame.pack();
-			frame.setVisible( true );
-			space.exit();
-		}catch (Exception e) {
-			System.err.println("MandelbrotClient exception:");
-			e.printStackTrace();
-		}
-	}
-
-=======
     		return count;
     	
     	}catch (Exception e){
@@ -154,7 +140,7 @@ public class MandelbrotClient {
     		return null;
     		}
     }
->>>>>>> 379160da19d04cf74397d3f5006ec7ba7a950095
+
 	
 	private static JLabel displayMandelbrotSetTaskReturnValue( int[][] counts )
 	{
