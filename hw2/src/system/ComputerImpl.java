@@ -46,6 +46,31 @@ public class ComputerImpl implements Computer {
             e.printStackTrace();
         }
 	}
+	public static void initLocaly(ComputerImpl cmpl) { // Only used all is done in one JVM
+		String spaceHost = "localhost";
+		int port = 1098;
+		String name = "Computer";
+		String spaceName = "Space";
+		if (System.getSecurityManager() == null ) 
+		{ 
+		   System.setSecurityManager(new java.rmi.RMISecurityManager() ); 
+		}
+		try{
+			
+			Computer stub = (Computer) UnicastRemoteObject.exportObject(cmpl, 0);
+			Registry registry = LocateRegistry.createRegistry( port );
+			registry.rebind(name, stub);
+			
+			System.out.println("Connecting to space: " + spaceHost);
+			Registry registrySpace = LocateRegistry.getRegistry(spaceHost);
+			Computer2Space space = (Computer2Space)registrySpace.lookup(spaceName);
+			space.register(cmpl);
+			System.out.println("ComputerImpl bound");
+		} catch (Exception e) {
+            System.err.println("ComputerImpl exception:");
+            e.printStackTrace();
+        }
+	}
 
 	@Override
 	public void exit() throws RemoteException {

@@ -85,6 +85,7 @@
   	  <arg value="${standalone}"/>
   	  <classpath>
   	    <pathelement location="dist/client.jar"/>
+  	    <pathelement location="dist/system.jar"/>
   	  </classpath>
   	</java>
   </target>

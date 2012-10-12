@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import system.ComputerImpl;
 import system.SpaceImpl;
 import tasks.MandelbrotSetTask;
 import tasks.MandelbrotReturn;
@@ -22,6 +23,7 @@ public class MandelbrotClient {
 	private static final int numTasks = taskDivideNum*taskDivideNum;
 	private static boolean standalone = false; 
 	private static SpaceImpl localSpace;
+	private static ComputerImpl localComputer;
 	
 	
 	public static void main(String[] args) {
@@ -32,7 +34,10 @@ public class MandelbrotClient {
     			System.out.println("Running standalone mode");
     			standalone = true;
     			localSpace = new SpaceImpl();
-    			localSpace.init(localSpace);
+    			localSpace.initLocaly(localSpace);
+    			
+    			localComputer = new ComputerImpl();
+    			localComputer.initLocaly(localComputer);
     		}
     		
     	}

@@ -40,7 +40,7 @@ public class SpaceImpl implements Space,proxy, Computer2Space{
 		
 	}
 	
-	public static void init(Space spacel) { // for running in same JVM
+	public static void initLocaly(Space spacel) { // for running in same JVM
 		if (System.getSecurityManager() == null ) 
 		{ 
 		   System.setSecurityManager(new java.rmi.RMISecurityManager() ); 
